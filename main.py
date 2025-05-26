@@ -1,7 +1,7 @@
 import torch.nn as nn
 from ffn import ffn
 from mha import mha
-
+import torch
 class transformerBlock(nn.Module):
     def __init__(self, d_model, num_heads, d_ff=2048):
         super(transformerBlock, self).__init__()
@@ -28,7 +28,26 @@ class encoder(nn.Module):
         self.layers = nn.ModuleList([transformerBlock(d_model, num_heads, d_ff) for _ in range(num_layers)])
     
     def get_pos_encoding(self, max_seq_len, d_model):
+        pos = torch.arange(max_seq_len).unsqueeze(1).float()
+        i = torch.arange(d_model).unsqueeze(0).float()
+
+        angle_rates = 1 / torch.pow(10000, (2 * (i // 2)) / d_model)
+        angle_rads = pos * angle_rates
+        pos_enc = torch.zeros(max_seq_len, d_model)
+        pos_enc[:, 0::2] = torch.sin(angle_rads[:, 0::2])
+        pos_enc[:, 1::2] = torch.cos(angle_rads[:, 1::2])
+        return pos_enc.unsqueeze(0)  # Add batch dimension
+    
+    def forward(self, x):
+        # Embedding + Positional Encoding
+        x = self.embedding(x) + self.position_encoding[:, :x.size(1), :].to(x.device)
         
+        # Pass through Transformer blocks
+        for layer in self.layers:
+            x = layer(x)
+        
+        return x
+
 
 
 
