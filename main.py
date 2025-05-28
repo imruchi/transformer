@@ -47,6 +47,18 @@ class encoder(nn.Module):
             x = layer(x)
         
         return x
+    
+
+class DecoderBlock(nn.Module):
+    def __init__(self, d_model, num_heads, d_ff):
+        super(DecoderBlock, self).__init__()
+        self.attn1 = MultiHeadAttention(d_model, num_heads)  # Self-attention
+        self.attn2 = MultiHeadAttention(d_model, num_heads)  # Encoder-decoder attention
+        self.ffn = FeedForward(d_model, d_ff)  # Feed-forward network
+        self.norm1 = nn.LayerNorm(d_model)  # Layer normalization for self-attention output
+        self.norm2 = nn.LayerNorm(d_model)  # Layer normalization for encoder-decoder attention output
+        self.norm3 = nn.LayerNorm(d_model)  # Layer normalization for feed-forward network output
+        self.dropout = nn.Dropout(0.1)  # Dropout for regularization
 
 
 
