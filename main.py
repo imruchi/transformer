@@ -104,14 +104,14 @@ class Transformer(nn.Module):
 
 
 
-model = Transformer(d_model=512, num_heads=8, num_layers=6, d_ff=2048, vocab_size=10000, max_seq_len=512)
+# model = Transformer(d_model=512, num_heads=8, num_layers=6, d_ff=2048, vocab_size=10000, max_seq_len=512)
 
-# some dummy input data (e.g., tokenized sentences)
-input_seq = torch.randint(0, 10000, (2, 10))  
-target_seq = torch.randint(0, 10000, (2, 10))  
+# # some dummy input data (e.g., tokenized sentences)
+# input_seq = torch.randint(0, 10000, (2, 10))  
+# target_seq = torch.randint(0, 10000, (2, 10))  
 
-# Forward pass through the model
-output = model(input_seq, target_seq)
+# # Forward pass through the model
+# output = model(input_seq, target_seq)
 
 
 
